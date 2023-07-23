@@ -1,35 +1,44 @@
-import { Component } from "react";
+import { Component } from 'react';
 
-import ContactForm from "./ContactForm";
+import ContactForm from './ContactForm';
+import ContactList from './ContactList';
 
 export default class App extends Component {
-state = {
-  contacts: [],
-}
+  state = {
+    contacts: [],
+  };
 
-handleAddContact = (newContact) =>
-this.setState(({ contacts }) => ({
-  contacts: [...contacts, newContact],
-}))
+  handleAddContact = newContact =>
+    this.setState(({ contacts }) => ({
+      contacts: [...contacts, newContact],
+    }));
 
+  handleCheckUniqueContact = name => {
+    const { contacts } = this.state;
 
-handleCheckUniqueContact = (name) => {
-  const { contacts } = this.state;
+    const isExistContact = !!contacts.find(contact => contact.name === name);
 
-  const isExsistContact = !!contacts.find(contact => contact.name === name)
+    isExistContact && alert('Contact is already exist');
 
-  isExsistContact && alert('Contact is already exist')
+    return !isExistContact;
+  };
 
-  return !isExsistContact
-
-}
+  handleRemoveContact = id =>
+    this.setState(({ contacts }) => ({
+      contacts: contacts.filter(contact => contact.id !== id),
+    }));
 
   render() {
+    const { contacts } = this.state;
     return (
-    <>
-    <h2>Form Contact</h2>
-    <ContactForm onAdd={this.handleAddContact}/>
-    </>
-    )
+      <>
+        <h2>Form Contact</h2>
+        <ContactForm
+          onAdd={this.handleAddContact}
+          onhandleCheckUnique={this.handleCheckUnique}
+        />
+        <ContactList contacts={contacts} onRemove={this.hendleRemoveContact} />
+      </>
+    );
   }
 }

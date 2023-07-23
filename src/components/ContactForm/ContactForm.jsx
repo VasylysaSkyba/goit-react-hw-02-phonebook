@@ -9,7 +9,7 @@ const INITAL_STATE = {
 class ContactForm extends Component {
     state = INITAL_STATE
 
-    handleCangeForm = ({ target }) => {
+    handleChangeForm = ({ target }) => {
         const {name, value} = target
         this.setState( { [name]: value})
     }
@@ -18,7 +18,7 @@ handleFormSubmit = (el) => {
     el.preventDefault()
 
     const { name, phone } = this.state;
-    const { onAdd } this.props;
+    const { onAdd } = this.props;
 
 const isValidateForm = this.validateForm()
 
@@ -43,9 +43,9 @@ resetForm = () => this.setState(INITAL_STATE)
     render() {
         const { name, phone } = this.state
         return(
-            <form>
-                <input type="text" name="name" placeholder="Enter name" value={name} onChange></input>
-                <input type="tel" name="phone" placeholder="Enter phone number" value={phone} onChange></input>
+            <form onSubmit={this.handleFormSubmit}>
+                <input type="text" name="name" placeholder="Enter name" value={name} onChange = {this.handleChangeForm} />
+                <input type="tel" name="phone" placeholder="Enter phone number" value={phone} onChange = {this.handleChangeForm} />
                 <button type="submit">Add contact</button>
             </form>
         )
