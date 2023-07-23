@@ -44,8 +44,8 @@ resetForm = () => this.setState(INITAL_STATE)
         const { name, phone } = this.state
         return(
             <form onSubmit={this.handleFormSubmit}>
-                <input type="text" name="name" placeholder="Enter name" value={name} onChange = {this.handleChangeForm} />
-                <input type="tel" name="phone" placeholder="Enter phone number" value={phone} onChange = {this.handleChangeForm} />
+                <input type="text" name="name" placeholder="Name" value={name} onChange = {this.handleChangeForm} />
+                <input type="tel" name="phone" placeholder="Number" value={phone} onChange = {this.handleChangeForm} />
                 <button type="submit">Add contact</button>
             </form>
         )

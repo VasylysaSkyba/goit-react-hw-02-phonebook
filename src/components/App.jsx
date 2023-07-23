@@ -32,7 +32,7 @@ export default class App extends Component {
     const { contacts } = this.state;
     return (
       <>
-        <h2>Form Contact</h2>
+        <h2>Phonebook</h2>
         <ContactForm
           onAdd={this.handleAddContact}
           onhandleCheckUnique={this.handleCheckUnique}
