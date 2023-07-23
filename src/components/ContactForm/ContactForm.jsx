@@ -1,10 +1,13 @@
 import { Component } from "react"
+import { v4 as uuid } from "uuid"
+
+const INITAL_STATE = {
+    name: '',
+    phone: '',
+}
 
 class ContactForm extends Component {
-    state = {
-        name: '',
-        phone: '',
-    }
+    state = INITAL_STATE
 
     handleCangeForm = ({ target }) => {
         const {name, value} = target
@@ -18,8 +21,10 @@ handleFormSubmit = (el) => {
     const { onAdd } this.props;
 
 const isValidateForm = this.validateForm()
-if(!sValidateForm) return
-onAdd ({name, phone })
+
+if(!isValidateForm) return
+
+onAdd ({id: uuid(), name, phone })
 }
 
 validateForm = () => {
@@ -29,8 +34,11 @@ validateForm = () => {
         alert('Some filed is enpty')
         return false
     }
+
     return onCheckUnique(name)
 }
+
+resetForm = () => this.setState(INITAL_STATE)
 
     render() {
         const { name, phone } = this.state
