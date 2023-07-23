@@ -11,6 +11,26 @@ class ContactForm extends Component {
         this.setState( { [name]: value})
     }
 
+handleFormSubmit = (el) => {
+    el.preventDefault()
+
+    const { name, phone } = this.state;
+    const { onAdd } this.props;
+
+const isValidateForm = this.validateForm()
+if(!sValidateForm) return
+onAdd ({name, phone })
+}
+
+validateForm = () => {
+    const { name, phone } = this.state;
+    const { onCheckUnique } = this.props
+    if (!name || !phone) {
+        alert('Some filed is enpty')
+        return false
+    }
+    return onCheckUnique(name)
+}
 
     render() {
         const { name, phone } = this.state
