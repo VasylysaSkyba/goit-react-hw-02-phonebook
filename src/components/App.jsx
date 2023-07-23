@@ -13,6 +13,17 @@ this.setState(({ contacts }) => ({
 }))
 
 
+handleCheckUniqueContact = (name) => {
+  const { contacts } = this.state;
+
+  const isExsistContact = !!contacts.find(contact => contact.name === name)
+
+  isExsistContact && alert('Contact is already exist')
+
+  return !isExsistContact
+
+}
+
   render() {
     return (
     <>
