@@ -1,65 +1,72 @@
-import { Component } from 'react';
-import { v4 as uuid } from 'uuid';
-
-const INITAL_STATE = {
-  name: '',
-  phone: '',
-};
+import React, { Component } from 'react';
+import css from './ContactForm.module.css';
+import PropTypes from 'prop-types';
 
 class ContactForm extends Component {
-  state = INITAL_STATE;
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  };
 
-  handleChangeForm = ({ target }) => {
-    const { name, value } = target;
+  state = {
+    name: '',
+    number: '',
+  };
+
+  handleChange = event => {
+    const { name, value } = event.currentTarget;
     this.setState({ [name]: value });
   };
 
-  handleFormSubmit = el => {
-    el.preventDefault();
-
-    const { name, phone } = this.state;
-    const { onAdd } = this.props;
-
-    const isValidateForm = this.validateForm();
-
-    if (!isValidateForm) return;
-
-    onAdd({ id: uuid(), name, phone });
-  };
-
-  validateForm = () => {
-    const { name, phone } = this.state;
-    const { onCheckUnique } = this.props;
-    if (!name || !phone) {
-      alert('Some filed is enpty');
-      return false;
+  handleSubmit = event => {
+    event.preventDefault();
+    const { onSubmit } = this.props;
+    const result = onSubmit({ ...this.state });
+    // result true or false
+    if (result) {
+      this.resetForm();
     }
-
-    return onCheckUnique(name);
   };
 
-  resetForm = () => this.setState(INITAL_STATE);
+  resetForm = () => {
+    this.setState(() => ({
+      name: '',
+      number: '',
+    }));
+  };
 
   render() {
-    const { name, phone } = this.state;
-    
     return (
-      <form onSubmit={this.handleFormSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={name}
-          onChange={this.handleChangeForm}
-        />
-        <input
-          type="tel"
-          name="phone"
-          placeholder="Number"
-          value={phone}
-          onChange={this.handleChangeForm}
-        />
-        <button type="submit">Add contact</button>
+      <form className={css.form} onSubmit={this.handleSubmit}>
+        <label className={css.label}>
+          Name
+          <input
+            className={css.inputName}
+            value={this.state.name}
+            onChange={this.handleChange}
+            type="text"
+            name="name"
+            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+            required
+          />
+        </label>
+
+        <label className={css.label}>
+          Number
+          <input
+            className={css.inputNumber}
+            value={this.state.number}
+            onChange={this.handleChange}
+            type="tel"
+            name="number"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
+          />
+        </label>
+        <button className={css.buttonAdd} type="submit">
+          Add contact
+        </button>
       </form>
     );
   }

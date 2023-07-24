@@ -1,44 +1,84 @@
-import { Component } from 'react';
-
+import React, { Component } from 'react';
+import css from './App.module.css';
+import { nanoid } from 'nanoid';
 import ContactForm from './ContactForm';
 import ContactList from './ContactList';
+import Filter from './Filter';
 
-export default class App extends Component {
+class App extends Component {
   state = {
-    contacts: [],
+    contacts: [
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+    ],
+    filter: '',
   };
 
-  handleAddContact = newContact =>
-    this.setState(({ contacts }) => ({
-      contacts: [...contacts, newContact],
-    }));
-
-  handleCheckUniqueContact = name => {
+  isDublicate(name) {
+    const normalizedName = name.toLowerCase();
     const { contacts } = this.state;
+    const result = contacts.find(({ name }) => {
+      return name.toLowerCase() === normalizedName;
+    });
+    return Boolean(result);
+  }
 
-    const isExistContact = !!contacts.find(contact => contact.name === name);
+  addContact = ({ name, number }) => {
+    if (this.isDublicate(name)) {
+      alert(`${name} is already in contacts`);
+      return false;
+    }
 
-    isExistContact && alert('Contact is already exist');
+    const contact = {
+      id: nanoid(),
+      name: name,
+      number: number,
+    };
 
-    return !isExistContact;
+    this.setState(prevstate => ({
+      contacts: [...prevstate.contacts, contact],
+    }));
+    return true;
   };
 
-  handleRemoveContact = id =>
-    this.setState(({ contacts }) => ({
-      contacts: contacts.filter(contact => contact.id !== id),
+  changeFilter = event => {
+    this.setState({ filter: event.currentTarget.value });
+  };
+
+  getVisisbleContacts = () => {
+    const { filter, contacts } = this.state;
+    const normalizedFilter = filter.toLocaleLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLocaleLowerCase().includes(normalizedFilter)
+    );
+  };
+
+  deleteContact = todoId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== todoId),
     }));
+  };
 
   render() {
-    const { contacts } = this.state;
+    const { contacts, filter } = this.state;
+
     return (
-      <>
-        <h2>Phonebook</h2>
-        <ContactForm
-          onAdd={this.handleAddContact}
-          onhandleCheckUnique={this.handleCheckUnique}
+      <div className={css.phonebookContainer}>
+        <h1 className={css.titlePhonebook}>Phonebook</h1>
+        <ContactForm onSubmit={this.addContact} />
+
+        <h2 className={css.titleContacts}>Contacts</h2>
+        <div className={css.allContacts}>All contacts: {contacts.length}</div>
+        <Filter value={filter} onChange={this.changeFilter} />
+
+        <ContactList
+          contacts={this.getVisisbleContacts()}
+          onDeleteContact={this.deleteContact}
         />
-        <ContactList contacts={contacts} onRemove={this.hendleRemoveContact} />
-      </>
+      </div>
     );
   }
 }
+export default App;
